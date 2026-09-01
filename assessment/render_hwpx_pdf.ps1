@@ -7,7 +7,9 @@ New-Item -ItemType Directory -Path ([System.IO.Path]::GetDirectoryName($target))
 
 $hwp = New-Object -ComObject HWPFrame.HwpObject
 try {
+    try { $hwp.RegisterModule('FilePathCheckDLL', 'SecurityModule') | Out-Null } catch {}
     $hwp.XHwpWindows.Item(0).Visible = $false
+    $hwp.SetMessageBoxMode(0x20000)
     $opened = $hwp.Open($source, 'HWPX', 'forceopen:true;versionwarning:false;suspendpassword:true')
     if (-not $opened) { throw "Failed to open $source" }
     $saved = $hwp.SaveAs($target, 'PDF', '')

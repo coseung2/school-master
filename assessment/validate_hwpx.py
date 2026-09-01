@@ -19,7 +19,8 @@ with zipfile.ZipFile(path) as archive:
         raise SystemExit("MIMETYPE_NOT_FIRST")
     if archive.getinfo("mimetype").compress_type != zipfile.ZIP_STORED:
         raise SystemExit("MIMETYPE_COMPRESSED")
-    root = ET.fromstring(archive.read("Contents/section0.xml"))
+    archive_section = archive.read("Contents/section0.xml")
+    root = ET.fromstring(archive_section)
     ET.fromstring(archive.read("Contents/header.xml"))
     ET.fromstring(archive.read("Contents/content.hpf"))
 
@@ -47,6 +48,15 @@ checks = {
             "더울 발전시킬",
             "도형(수학)",
             "생활 속 대상에서 도형",
+            "도형을 3개 찾았을 경우",
+            "도형을 2개만 찾았을 경우",
+            "도형을 1개만 찾았을 경우",
+            "찾은 도형",
+            "찾은 수학적 원리",
+            "생활 속 대상에 들어 있는 다양한 수학적 원리",
+            "이를 이를 통해 추론할 수 있는",
+            "가치를 인증 받고",
+            "목반에 글자를",
         )
     ),
     "art7": all(
@@ -57,9 +67,10 @@ checks = {
             "삼묵법",
             "몰골법",
             "구륵법",
-            "선의 굵기에 변화 주기",
+            "선의 굵기와 흐름에 변화를 주기",
         )
     ),
+    "layout_cache_removed": b"<hp:linesegarray>" not in archive_section,
 }
 
 for value in (
